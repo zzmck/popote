@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  popote:
+    build: .
+    container_name: popote
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - popote_data:/data
+    environment:
+      - PORT=3000
+      - DATA_DIR=/data
+
+volumes:
+  popote_data:

@@ -1,0 +1,80 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: popote
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: popote-secrets
+  namespace: popote
+type: Opaque
+stringData:
+  SUPER_ADMIN_USERNAME: "admin"
+  SUPER_ADMIN_PASSWORD: "aChanger"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: popote-data
+  namespace: popote
+spec:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: popote
+  namespace: popote
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: popote }
+  template:
+    metadata:
+      labels: { app: popote }
+    spec:
+      containers:
+        - name: popote
+          image: GITHUB.COM/TONREPOS/popote:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: PORT
+              value: "3000"
+            - name: DATA_DIR
+              value: /data
+            - name: SUPER_ADMIN_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: popote-secrets
+                  key: SUPER_ADMIN_USERNAME
+            - name: SUPER_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: popote-secrets
+                  key: SUPER_ADMIN_PASSWORD
+          volumeMounts:
+            - name: data
+              mountPath: /data
+          resources:
+            requests: { cpu: "50m", memory: "64Mi" }
+            limits:   { cpu: "250m", memory: "256Mi" }
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: popote-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: popote
+  namespace: popote
+spec:
+  selector: { app: popote }
+  ports:
+    - port: 80
+      targetPort: 3000

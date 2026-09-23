@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Popote</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fraunces:wght@600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: { sans: ['Inter','sans-serif'], serif: ['Fraunces','serif'] },
+        colors: {
+          navy: { 50:'#eef2f8',100:'#d7e0ee',200:'#aebfdd',300:'#829bc9',400:'#5678b2',500:'#3a5a97',600:'#2c4679',700:'#1f3157',800:'#162443',900:'#0d1730' },
+          gold: { 50:'#fdf8ec',100:'#f8ecc8',200:'#f0d98d',300:'#e6bf52',400:'#d9a72f',500:'#c08f22',600:'#9c711c',700:'#7a591a' }
+        }
+      }
+    }
+  };
+</script>
+<style>
+  :root {
+    --bg: #ffffff; --panel:#ffffff; --ink:#0d1730; --muted:#6b7280; --line:#e7e9ee;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --bg:#0d1730; --panel:#162443; --ink:#f4f6fb; --muted:#9aa4b6; --line:#25314d; }
+  }
+  :root[data-theme="dark"] { --bg:#0d1730; --panel:#162443; --ink:#f4f6fb; --muted:#9aa4b6; --line:#25314d; }
+  html, body { height:100%; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  body { background:var(--bg); color:var(--ink); font-family:'Inter',sans-serif; -webkit-font-smoothing:antialiased; -webkit-tap-highlight-color: transparent; overscroll-behavior-y: none; }
+  .card { background:var(--panel); border:1px solid var(--line); }
+  ::-webkit-scrollbar { height:6px; width:6px; }
+  ::-webkit-scrollbar-thumb { background:#d7dce6; border-radius:99px; }
+  .tab-scroll { scrollbar-width:none; -webkit-overflow-scrolling: touch; }
+  .tab-scroll::-webkit-scrollbar { display:none; }
+  button, [role="button"], select, input, a { touch-action: manipulation; }
+  button { -webkit-tap-highlight-color: transparent; }
+  .pop-in { animation: popin .18s ease-out; }
+  @keyframes popin { from{opacity:0; transform:translateY(4px)} to{opacity:1; transform:translateY(0)} }
+  .toast { animation: toastin .2s ease-out, toastout .3s ease-in 2.4s forwards; }
+  @keyframes toastin { from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:translateY(0)} }
+  @keyframes toastout { to{opacity:0; transform:translateY(10px)} }
+  input[type=number]::-webkit-inner-spin-button { opacity:1; }
+  .qty-badge { min-width:1.5rem; text-align:center; }
+  .icon-btn { display:inline-flex; align-items:center; justify-content:center; min-width:2.5rem; min-height:2.5rem; }
+  input, select, textarea { font-size:16px !important; } /* évite le zoom auto de Safari iOS au focus */
+</style>
+</head>
+<body class="min-h-screen">
+
+<div id="root" class="max-w-3xl mx-auto pb-28"></div>
+<div id="toasts" class="fixed left-1/2 -translate-x-1/2 z-50 flex flex-col gap-2 items-center" style="bottom: calc(6.5rem + env(safe-area-inset-bottom,0px));"></div>
+<div id="modal-root"></div>
+
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>
